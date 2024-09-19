@@ -11,7 +11,7 @@ class SplashPage extends StatelessWidget {
       splash: Image.asset(
         'assets/splash.png',
         fit: BoxFit.fill,
-      ), // Reemplaza con tu logo
+      ),
       nextScreen: const HomePage(),
       splashTransition: SplashTransition.fadeTransition,
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,

@@ -1,51 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:gem_notes/data/services/ai_chat_service.dart';
 
 class ChatPage extends StatefulWidget {
+  const ChatPage({
+    super.key,
+    required this.aiChatService,
+  });
+
+  final AiChatService aiChatService;
+
   @override
-  _ChatPageState createState() => _ChatPageState();
+  State<ChatPage> createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
-  //final GeminiService geminiService = GeminiService();
-  final TextEditingController _textController = TextEditingController();
-  List<ChatMessage> _messages = [];
+  late final TextEditingController _textController;
+  final List<(bool isUser, String content)> _messages = [];
 
-  /* void _handleSubmitted(String text) async {
-    _textController.clear();
-    ChatMessage message = ChatMessage(
-      text: text,
-      isUser: true,
-    );
-    setState(() {
-      _messages.insert(0, message);
-    });
+  @override
+  void initState() {
+    super.initState();
+    _textController = TextEditingController();
+    widget.aiChatService.clearHistory();
+    _messages.clear();
+  }
 
-    String response = await geminiService.queryGemini(text);
-
-    ChatMessage aiMessage = ChatMessage(
-      text: response,
-      isUser: false,
-    );
-    setState(() {
-      _messages.insert(0, aiMessage);
-    });
-  } */
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat con IA'),
+        title: const Text('Chat con IA'),
       ),
       body: Column(
         children: <Widget>[
           Flexible(
             child: ListView(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               children: _messages.map((message) => _buildChatMessage(message)).toList(),
             ),
           ),
-          Divider(height: 1.0),
+          const Divider(height: 1.0),
           Container(
             decoration: BoxDecoration(color: Theme.of(context).cardColor),
             child: _buildTextComposer(),
@@ -55,11 +55,12 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget _buildChatMessage(ChatMessage message) {
+  Widget _buildChatMessage((bool isUser, String content) message) {
+    final (isUser, content) = message;
     return ListTile(
-      title: Text(message.text),
-      leading: message.isUser ? null : Icon(Icons.computer),
-      trailing: message.isUser ? Icon(Icons.person) : null,
+      title: Text(content),
+      leading: isUser ? null : const Icon(Icons.computer),
+      trailing: isUser ? const Icon(Icons.person) : null,
     );
   }
 
@@ -73,15 +74,15 @@ class _ChatPageState extends State<ChatPage> {
             Flexible(
               child: TextField(
                 controller: _textController,
-                //onSubmitted: _handleSubmitted,
-                decoration: InputDecoration.collapsed(hintText: "Escribe tu consulta"),
+                onSubmitted: _handleSubmitted,
+                decoration: const InputDecoration.collapsed(hintText: "Escribe tu consulta"),
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 4.0),
+              margin: const EdgeInsets.symmetric(horizontal: 4.0),
               child: IconButton(
-                icon: Icon(Icons.send),
-                onPressed: () => {},// _handleSubmitted(_textController.text),
+                icon: const Icon(Icons.send),
+                onPressed: () => _handleSubmitted(_textController.text),
               ),
             ),
           ],
@@ -89,11 +90,23 @@ class _ChatPageState extends State<ChatPage> {
       ),
     );
   }
-}
 
-class ChatMessage {
-  ChatMessage({required this.text, required this.isUser});
+  void _handleSubmitted(String question) async {
+    _textController.clear();
+    setState(() {
+      _messages.add((true, question));
+    });
 
-  final String text;
-  final bool isUser;
+    setState(() {
+      _messages.add((false, '...'));
+    });
+
+    String output = '';
+    await for (final chunk in widget.aiChatService.askQuestion(question)) {
+      output += chunk;
+      setState(() {
+        _messages[_messages.length - 1] = (false, output);
+      });
+    }
+  }
 }
