@@ -1,11 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:gem_notes/core/model/note.dart';
 
 class NoteListWidget extends StatelessWidget {
-  final Note note;
+  const NoteListWidget({
+    super.key,
+    required this.note,
+  });
 
-  NoteListWidget({required this.note});
+  final Note note;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +26,10 @@ class NoteListWidget extends StatelessWidget {
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 8),
-            Flexible(child: MarkdownBody(data: note.content)),
+            Flexible(
+                child: MarkdownBody(
+              data: '${note.content.substring(0, min(200, note.content.length))}...',
+            )),
           ],
         ),
       ),

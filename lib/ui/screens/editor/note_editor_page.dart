@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:gem_notes/core/model/note.dart';
 import 'package:gem_notes/ui/bloc/notes/notes_cubit.dart';
 
 class NoteEditorPage extends StatefulWidget {
@@ -42,12 +40,10 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
           FilledButton.icon(
             icon: const Icon(Icons.save),
             onPressed: () {
-              final note = Note(
-                title: _titleController.text,
-                content: _contentController.text,
-                date: DateTime.now(),
-              );
-              context.read<NotesCubit>().createNote(note);
+              context.read<NotesCubit>().createNote(
+                    title: _titleController.text,
+                    content: _contentController.text,
+                  );
               Navigator.pop(context);
             },
             label: const Text('Save'),

@@ -1,56 +1,41 @@
-import 'dart:convert';
-
+import 'package:collection/collection.dart';
 import 'package:gem_notes/core/model/note.dart';
-import 'package:gem_notes/data/dtos/note_dto.dart';
-import 'package:gem_notes/objectbox.g.dart';
 import 'package:langchain/langchain.dart';
-import 'package:langchain_community/langchain_community.dart';
-import 'package:langchain_google/langchain_google.dart';
-import 'package:path_provider/path_provider.dart';
+
+import '../entities/note_entity.dart';
+import '../stores/objectbox.g.dart';
+import '../stores/vector_store.dart';
 
 class LocalStorageService {
-  late Store store;
+  LocalStorageService({
+    required Store store,
+    required NotesVectorStore vectorStore,
+  })  : _notesBox = store.box<NoteEntity>(),
+        _vectorStore = vectorStore,
+        _textSplitter = const RecursiveCharacterTextSplitter(chunkSize: 1000, chunkOverlap: 200);
 
-  late BaseObjectBoxVectorStore<NoteDto> vectorStore;
-
-  Future<void> init() async {
-    final docsDir = await getApplicationDocumentsDirectory();
-    store = await openStore(directory: docsDir.path);
-
-    vectorStore = BaseObjectBoxVectorStore<NoteDto>(
-      embeddings: GoogleGenerativeAIEmbeddings(),
-      box: store.box<NoteDto>(),
-      createEntity: (id, content, metadata, embedding) {
-        final metadataParsed = jsonDecode(metadata);
-        return NoteDto(
-          id: id,
-          title: metadataParsed['title'],
-          content: content,
-          timestamp: DateTime.parse(metadataParsed['timestamp']),
-          embedding: metadataParsed['embedding'],
-        );
-      },
-      createDocument: (note) => Document(
-        pageContent: note.content,
-        id: note.id,
-        metadata: {
-          'title': note.title,
-          'timestamp': note.timestamp,
-          'embedding': note.embedding,
-        },
-      ),
-      getEmbeddingProperty: () => NoteDto_.embedding,
-      getIdProperty: () => NoteDto_.id,
-    );
-  }
+  final Box<NoteEntity> _notesBox;
+  final NotesVectorStore _vectorStore;
+  final RecursiveCharacterTextSplitter _textSplitter;
 
   Future<void> storeNote(Note note) async {
-    store.box<NoteDto>().put(NoteDto.fromEntity(note));
+    _notesBox.put(NoteEntity.fromModel(note));
+    final docs = _createNoteChunks(note);
+    await _vectorStore.addDocuments(documents: docs);
   }
 
-  List<Note> getNotes() => store
-      .box<NoteDto>()
-      .getAll()
-      .map((dto) => Note(title: dto.title, content: dto.content, date: dto.timestamp))
-      .toList();
+  List<Document> _createNoteChunks(Note note) {
+    final noteString = '${note.title}\n\n${note.content}';
+    return _textSplitter.splitText(noteString).mapIndexed((index, chunk) {
+      return Document(
+        id: '${note.id}_$index',
+        pageContent: chunk,
+        metadata: {
+          'note_id': note.id,
+        },
+      );
+    }).toList();
+  }
+
+  List<Note> getNotes() => _notesBox.getAll().map((dto) => dto.toModel()).toList();
 }

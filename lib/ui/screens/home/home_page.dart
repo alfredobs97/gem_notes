@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gem_notes/core/model/note.dart';
 import 'package:gem_notes/ui/bloc/notes/notes_cubit.dart';
 import 'package:gem_notes/ui/routes.dart';
 import 'package:gem_notes/ui/screens/editor/note_editor_page.dart';

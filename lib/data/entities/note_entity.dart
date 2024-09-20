@@ -2,17 +2,12 @@ import 'package:gem_notes/core/model/note.dart';
 import 'package:objectbox/objectbox.dart';
 
 @Entity()
-class NoteDto {
+class NoteEntity {
   @Id()
   int internalId = 0;
 
   @Unique(onConflict: ConflictStrategy.replace)
   final String id;
-
-  /// The embedding of the document.
-  @HnswIndex(dimensions: 512) // Set dynamically in the ObjectBoxVectorStore
-  @Property(type: PropertyType.floatVector)
-  final List<double> embedding;
 
   final String title;
   final String content;
@@ -20,23 +15,22 @@ class NoteDto {
   @Property(type: PropertyType.date)
   final DateTime timestamp;
 
-  NoteDto({
+  NoteEntity({
+    required this.id,
     required this.title,
     required this.content,
     required this.timestamp,
-    required this.id,
-    required this.embedding,
   });
 
-  factory NoteDto.fromEntity(Note note) => NoteDto(
+  factory NoteEntity.fromModel(Note note) => NoteEntity(
+        id: note.id,
         title: note.title,
         content: note.content,
         timestamp: note.date,
-        embedding: [],
-        id: '',
       );
 
-  Note toEntity() => Note(
+  Note toModel() => Note(
+        id: id,
         title: title,
         content: content,
         date: timestamp,
