@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gem_notes/core/model/note.dart';
 import 'package:gem_notes/data/services/local_storage_service.dart';
 import 'package:gem_notes/ui/bloc/notes/notes_cubit.dart';
 import 'package:gem_notes/ui/routes.dart';
 import 'package:gem_notes/ui/screens/chat/chat_page.dart';
 import 'package:gem_notes/ui/screens/home/home_page.dart';
+import 'package:gem_notes/ui/screens/note_detail/note_detail_page.dart';
 import 'package:gem_notes/ui/screens/splash/splash_page.dart';
 import 'package:gem_notes/ui/theme/app_theme.dart';
 import 'package:langchain_google/langchain_google.dart';
@@ -64,6 +66,14 @@ class MyApp extends StatelessWidget {
           Routes.splash.name: (_) => const SplashPage(),
           Routes.home.name: (_) => const HomePage(),
           Routes.chat.name: (_) => ChatPage(aiChatService: aiChatService),
+        },
+        onGenerateRoute: (routeSettings) {
+          if (routeSettings.name == Routes.noteDetails.name) {
+            return MaterialPageRoute(
+              builder: (_) => NoteDetailPage(note: routeSettings.arguments as Note),
+            );
+          }
+          return null;
         },
         initialRoute: Routes.splash.name,
         debugShowCheckedModeBanner: false,
