@@ -4,6 +4,7 @@ import 'package:gem_notes/ui/bloc/notes/notes_cubit.dart';
 import 'package:gem_notes/ui/routes.dart';
 import 'package:gem_notes/ui/screens/editor/note_editor_page.dart';
 import 'package:gem_notes/ui/screens/home/widgets/empty_state_widget.dart';
+import 'package:gem_notes/ui/screens/home/widgets/error_widget.dart';
 import 'package:gem_notes/ui/screens/home/widgets/note_list_widget.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
@@ -20,7 +21,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My notes'),
+        title: Text('Mis notas', style: Theme.of(context).textTheme.displaySmall),
         actions: [
           IconButton(
             icon: const Icon(HugeIcons.strokeRoundedGoogleGemini),
@@ -39,7 +40,10 @@ class _HomePageState extends State<HomePage> {
                     return NoteListWidget(note: state.notes[index]);
                   },
                 ),
-          NotesError() => ErrorWidget(state.error),
+          NotesError() => NoteListErrorWidget(
+              errorMessage: state.error.toString(),
+              onRetry: context.read<NotesCubit>().loadNotes,
+            ),
         },
       ),
       floatingActionButton: FloatingActionButton(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ErrorWidget extends StatelessWidget {
-  const ErrorWidget({
+class NoteListErrorWidget extends StatelessWidget {
+  const NoteListErrorWidget({
     super.key,
     required this.errorMessage,
     required this.onRetry,
@@ -23,7 +23,7 @@ class ErrorWidget extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           const Text(
-            'Oops! Something went wrong.',
+            'Oops! Algo salió mal.',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
@@ -34,7 +34,7 @@ class ErrorWidget extends StatelessWidget {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: onRetry,
-            child: const Text('Retry'),
+            child: const Text('Reintentar'),
           ),
         ],
       ),
