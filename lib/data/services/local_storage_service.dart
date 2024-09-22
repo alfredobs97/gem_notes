@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:gem_notes/core/model/note.dart';
 import 'package:langchain/langchain.dart';
@@ -24,6 +26,25 @@ class LocalStorageService {
     await _vectorStore.addDocuments(documents: docs);
   }
 
+  List<Note> getNotes() => _notesBox.getAll().map((dto) => dto.toModel()).toList();
+
+  void deleteNote(String id) {
+    _notesBox.remove(int.parse(id));
+    unawaited(_vectorStore.delete(ids: [id]));
+  }
+
+  Future<List<Note>> searchNotes(String query) async {
+    final response = await _vectorStore.similaritySearch(query: query);
+
+    final notes = response.fold<List<NoteEntity>>(<NoteEntity>[], (acc, doc) {
+      final note = _notesBox.get(doc.metadata['note_id']);
+
+      return acc.contains(note) ? acc : [note!, ...acc];
+    });
+
+    return notes.map((note) => note.toModel()).toList();
+  }
+
   List<Document> _createNoteChunks(Note note) {
     final noteString = '${note.title}\n\n${note.content}';
     return _textSplitter.splitText(noteString).mapIndexed((index, chunk) {
@@ -36,6 +57,4 @@ class LocalStorageService {
       );
     }).toList();
   }
-
-  List<Note> getNotes() => _notesBox.getAll().map((dto) => dto.toModel()).toList();
 }

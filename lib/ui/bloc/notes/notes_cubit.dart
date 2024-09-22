@@ -42,4 +42,23 @@ class NotesCubit extends Cubit<NotesState> {
       emit(NotesError(error: e));
     }
   }
+
+  Future<void> deleteNote(String id) async {
+    try {
+      localStorageService.deleteNote(id);
+      loadNotes();
+    } catch (e) {
+      emit(NotesError(error: e));
+    }
+  }
+
+  Future<void> searchNote(String query) async {
+    try {
+      final notes = await localStorageService.searchNotes(query);
+
+      emit(NotesReady(notes: notes));
+    } catch (e) {
+      emit(NotesError(error: e));
+    }
+  }
 }
