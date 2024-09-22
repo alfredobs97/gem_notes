@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gem_notes/data/services/ai_chat_service.dart';
+import 'package:gem_notes/ui/screens/chat/widgets/chat_messages_widget.dart';
+import 'package:gem_notes/ui/screens/chat/widgets/empty_chat_state_widget.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({
@@ -37,30 +39,20 @@ class _ChatPageState extends State<ChatPage> {
       appBar: AppBar(
         title: const Text('Chat con IA'),
       ),
-      body: Column(
-        children: <Widget>[
-          Flexible(
-            child: ListView(
-              padding: const EdgeInsets.all(8.0),
-              children: _messages.map((message) => _buildChatMessage(message)).toList(),
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            Flexible(
+              child: _messages.isEmpty ? const EmptyStateChatWidget() : ChatMessagesWidget(messages: _messages),
             ),
-          ),
-          const Divider(height: 1.0),
-          Container(
-            decoration: BoxDecoration(color: Theme.of(context).cardColor),
-            child: _buildTextComposer(),
-          ),
-        ],
+            const Divider(height: 1.0),
+            Container(
+              decoration: BoxDecoration(color: Theme.of(context).cardColor),
+              child: _buildTextComposer(),
+            ),
+          ],
+        ),
       ),
-    );
-  }
-
-  Widget _buildChatMessage((bool isUser, String content) message) {
-    final (isUser, content) = message;
-    return ListTile(
-      title: Text(content),
-      leading: isUser ? null : const Icon(Icons.computer),
-      trailing: isUser ? const Icon(Icons.person) : null,
     );
   }
 
