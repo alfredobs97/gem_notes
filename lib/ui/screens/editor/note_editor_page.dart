@@ -21,7 +21,7 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
-            decoration: const InputDecoration(labelText: 'Title'),
+            decoration: const InputDecoration(labelText: 'Título'),
             controller: _titleController,
           ),
           const SizedBox(height: 16),
@@ -31,14 +31,23 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
               minLines: 2,
               maxLines: null,
               decoration: const InputDecoration(
-                labelText: 'Note (markdown available)',
+                labelText: 'Detalles (Puedes usar markdown)',
               ),
               controller: _contentController,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
           FilledButton.icon(
+            label: Text('Guardar', style: Theme.of(context).textTheme.bodyMedium),
             icon: const Icon(Icons.save),
+            style: ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(
+                Theme.of(context).colorScheme.secondary,
+              ),
+              iconColor: WidgetStatePropertyAll(
+                Theme.of(context).colorScheme.onSecondaryContainer,
+              ),
+            ),
             onPressed: () {
               context.read<NotesCubit>().createNote(
                     title: _titleController.text,
@@ -46,7 +55,6 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
                   );
               Navigator.pop(context);
             },
-            label: const Text('Save'),
           ),
         ],
       ),
