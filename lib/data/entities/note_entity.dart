@@ -16,21 +16,20 @@ class NoteEntity {
   final DateTime timestamp;
 
   NoteEntity({
-    required this.id,
+    this.id = '0',
     required this.title,
     required this.content,
     required this.timestamp,
   });
 
   factory NoteEntity.fromModel(Note note) => NoteEntity(
-        id: note.id,
         title: note.title,
         content: note.content,
         timestamp: note.date,
       );
 
   Note toModel() => Note(
-        id: id,
+        id: internalId.toString(),
         title: title,
         content: content,
         date: timestamp,

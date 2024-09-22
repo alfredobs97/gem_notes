@@ -9,7 +9,8 @@
 import 'dart:typed_data';
 
 import 'package:flat_buffers/flat_buffers.dart' as fb;
-import 'package:objectbox/internal.dart' as obx_int; // generated code can access "internal" functionality
+import 'package:objectbox/internal.dart'
+    as obx_int; // generated code can access "internal" functionality
 import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
@@ -25,15 +26,27 @@ final _entities = <obx_int.ModelEntity>[
       lastPropertyId: const obx_int.IdUid(5, 5040762889891455221),
       flags: 0,
       properties: <obx_int.ModelProperty>[
-        obx_int.ModelProperty(id: const obx_int.IdUid(1, 1151089012648025341), name: 'internalId', type: 6, flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 1151089012648025341),
+            name: 'internalId',
+            type: 6,
+            flags: 1),
         obx_int.ModelProperty(
             id: const obx_int.IdUid(2, 3148358006357723839),
             name: 'id',
             type: 9,
             flags: 34848,
             indexId: const obx_int.IdUid(1, 4183747512225015965)),
-        obx_int.ModelProperty(id: const obx_int.IdUid(3, 3448369219669507715), name: 'content', type: 9, flags: 0),
-        obx_int.ModelProperty(id: const obx_int.IdUid(4, 5258579284493782916), name: 'metadata', type: 9, flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 3448369219669507715),
+            name: 'content',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 5258579284493782916),
+            name: 'metadata',
+            type: 9,
+            flags: 0),
         obx_int.ModelProperty(
             id: const obx_int.IdUid(5, 5040762889891455221),
             name: 'embedding',
@@ -47,21 +60,37 @@ final _entities = <obx_int.ModelEntity>[
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[]),
   obx_int.ModelEntity(
-      id: const obx_int.IdUid(2, 3635119032225383272),
+      id: const obx_int.IdUid(3, 8711972715997854453),
       name: 'NoteEntity',
-      lastPropertyId: const obx_int.IdUid(5, 5509364441883811211),
+      lastPropertyId: const obx_int.IdUid(5, 8582769590343536364),
       flags: 0,
       properties: <obx_int.ModelProperty>[
-        obx_int.ModelProperty(id: const obx_int.IdUid(1, 7311659951534772202), name: 'internalId', type: 6, flags: 1),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(2, 7693710975249712951),
+            id: const obx_int.IdUid(1, 631840292587637292),
+            name: 'internalId',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 5679661900170170170),
             name: 'id',
             type: 9,
             flags: 34848,
-            indexId: const obx_int.IdUid(3, 198404547475510926)),
-        obx_int.ModelProperty(id: const obx_int.IdUid(3, 4768344853885082831), name: 'title', type: 9, flags: 0),
-        obx_int.ModelProperty(id: const obx_int.IdUid(4, 5157714840131346526), name: 'content', type: 9, flags: 0),
-        obx_int.ModelProperty(id: const obx_int.IdUid(5, 5509364441883811211), name: 'timestamp', type: 10, flags: 0)
+            indexId: const obx_int.IdUid(4, 8547748684020807760)),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 899134192743073257),
+            name: 'title',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 4656112339183386521),
+            name: 'content',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 8582769590343536364),
+            name: 'timestamp',
+            type: 10,
+            flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
@@ -102,13 +131,19 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(2, 3635119032225383272),
-      lastIndexId: const obx_int.IdUid(3, 198404547475510926),
+      lastEntityId: const obx_int.IdUid(3, 8711972715997854453),
+      lastIndexId: const obx_int.IdUid(4, 8547748684020807760),
       lastRelationId: const obx_int.IdUid(0, 0),
       lastSequenceId: const obx_int.IdUid(0, 0),
-      retiredEntityUids: const [],
+      retiredEntityUids: const [3635119032225383272],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [],
+      retiredPropertyUids: const [
+        7311659951534772202,
+        7693710975249712951,
+        4768344853885082831,
+        5157714840131346526,
+        5509364441883811211
+      ],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -140,14 +175,22 @@ obx_int.ModelDefinition getObjectBoxModel() {
         objectFromFB: (obx.Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
-          final idParam = const fb.StringReader(asciiOptimization: true).vTableGet(buffer, rootOffset, 6, '');
-          final contentParam = const fb.StringReader(asciiOptimization: true).vTableGet(buffer, rootOffset, 8, '');
-          final metadataParam = const fb.StringReader(asciiOptimization: true).vTableGet(buffer, rootOffset, 10, '');
+          final idParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 6, '');
+          final contentParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 8, '');
+          final metadataParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 10, '');
           final embeddingParam =
-              const fb.ListReader<double>(fb.Float32Reader(), lazy: false).vTableGet(buffer, rootOffset, 12, []);
-          final object =
-              DocumentEntity(id: idParam, content: contentParam, metadata: metadataParam, embedding: embeddingParam)
-                ..internalId = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+              const fb.ListReader<double>(fb.Float32Reader(), lazy: false)
+                  .vTableGet(buffer, rootOffset, 12, []);
+          final object = DocumentEntity(
+              id: idParam,
+              content: contentParam,
+              metadata: metadataParam,
+              embedding: embeddingParam)
+            ..internalId =
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
 
           return object;
         }),
@@ -175,13 +218,21 @@ obx_int.ModelDefinition getObjectBoxModel() {
         objectFromFB: (obx.Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
-          final idParam = const fb.StringReader(asciiOptimization: true).vTableGet(buffer, rootOffset, 6, '');
-          final titleParam = const fb.StringReader(asciiOptimization: true).vTableGet(buffer, rootOffset, 8, '');
-          final contentParam = const fb.StringReader(asciiOptimization: true).vTableGet(buffer, rootOffset, 10, '');
-          final timestampParam =
-              DateTime.fromMillisecondsSinceEpoch(const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0));
-          final object = NoteEntity(id: idParam, title: titleParam, content: contentParam, timestamp: timestampParam)
-            ..internalId = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final idParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 6, '');
+          final titleParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 8, '');
+          final contentParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 10, '');
+          final timestampParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0));
+          final object = NoteEntity(
+              id: idParam,
+              title: titleParam,
+              content: contentParam,
+              timestamp: timestampParam)
+            ..internalId =
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
 
           return object;
         })
@@ -193,35 +244,45 @@ obx_int.ModelDefinition getObjectBoxModel() {
 /// [DocumentEntity] entity fields to define ObjectBox queries.
 class DocumentEntity_ {
   /// See [DocumentEntity.internalId].
-  static final internalId = obx.QueryIntegerProperty<DocumentEntity>(_entities[0].properties[0]);
+  static final internalId =
+      obx.QueryIntegerProperty<DocumentEntity>(_entities[0].properties[0]);
 
   /// See [DocumentEntity.id].
-  static final id = obx.QueryStringProperty<DocumentEntity>(_entities[0].properties[1]);
+  static final id =
+      obx.QueryStringProperty<DocumentEntity>(_entities[0].properties[1]);
 
   /// See [DocumentEntity.content].
-  static final content = obx.QueryStringProperty<DocumentEntity>(_entities[0].properties[2]);
+  static final content =
+      obx.QueryStringProperty<DocumentEntity>(_entities[0].properties[2]);
 
   /// See [DocumentEntity.metadata].
-  static final metadata = obx.QueryStringProperty<DocumentEntity>(_entities[0].properties[3]);
+  static final metadata =
+      obx.QueryStringProperty<DocumentEntity>(_entities[0].properties[3]);
 
   /// See [DocumentEntity.embedding].
-  static final embedding = obx.QueryHnswProperty<DocumentEntity>(_entities[0].properties[4]);
+  static final embedding =
+      obx.QueryHnswProperty<DocumentEntity>(_entities[0].properties[4]);
 }
 
 /// [NoteEntity] entity fields to define ObjectBox queries.
 class NoteEntity_ {
   /// See [NoteEntity.internalId].
-  static final internalId = obx.QueryIntegerProperty<NoteEntity>(_entities[1].properties[0]);
+  static final internalId =
+      obx.QueryIntegerProperty<NoteEntity>(_entities[1].properties[0]);
 
   /// See [NoteEntity.id].
-  static final id = obx.QueryStringProperty<NoteEntity>(_entities[1].properties[1]);
+  static final id =
+      obx.QueryStringProperty<NoteEntity>(_entities[1].properties[1]);
 
   /// See [NoteEntity.title].
-  static final title = obx.QueryStringProperty<NoteEntity>(_entities[1].properties[2]);
+  static final title =
+      obx.QueryStringProperty<NoteEntity>(_entities[1].properties[2]);
 
   /// See [NoteEntity.content].
-  static final content = obx.QueryStringProperty<NoteEntity>(_entities[1].properties[3]);
+  static final content =
+      obx.QueryStringProperty<NoteEntity>(_entities[1].properties[3]);
 
   /// See [NoteEntity.timestamp].
-  static final timestamp = obx.QueryDateProperty<NoteEntity>(_entities[1].properties[4]);
+  static final timestamp =
+      obx.QueryDateProperty<NoteEntity>(_entities[1].properties[4]);
 }
