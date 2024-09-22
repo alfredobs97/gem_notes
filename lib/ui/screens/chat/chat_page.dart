@@ -57,28 +57,23 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildTextComposer() {
-    return IconTheme(
-      data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Row(
-          children: <Widget>[
-            Flexible(
-              child: TextField(
-                controller: _textController,
-                onSubmitted: _handleSubmitted,
-                decoration: const InputDecoration.collapsed(hintText: "Escribe tu consulta"),
-              ),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Flexible(
+            child: TextField(
+              controller: _textController,
+              onSubmitted: _handleSubmitted,
+              decoration: const InputDecoration.collapsed(hintText: "Escribe tu consulta"),
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: IconButton(
-                icon: const Icon(Icons.send),
-                onPressed: () => _handleSubmitted(_textController.text),
-              ),
-            ),
-          ],
-        ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.send),
+            onPressed: () => _handleSubmitted(_textController.text),
+          ),
+        ],
       ),
     );
   }
