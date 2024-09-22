@@ -20,30 +20,8 @@ class AiChatService {
   ) {
     final retriever = vectorStore.asRetriever();
 
-    // 1. We contextualize the user question with the chat history
-    final contextualizePrompt = ChatPromptTemplate.fromTemplates(const [
-      (
-        ChatMessageType.system,
-        '''
-Given a chat history and the latest user question which might reference context in the chat history,
-formulate a standalone question which can be understood without the chat history. 
-Do NOT answer the question, just reformulate it if needed and otherwise return it as is.
-'''
-      ),
-      (ChatMessageType.messagesPlaceholder, 'history'),
-      (ChatMessageType.human, '{question}'),
-    ]);
-    final contextualizeChain = Runnable.mapInput<String, Map<String, dynamic>>((question) => {
-              'question': question,
-              'history': _history,
-            })
-        .pipe(contextualizePrompt) //
-        .pipe(chatModel) //
-        .pipe(const StringOutputParser());
-
-    // 2. We retrieve the most relevant documents and combine them into a single string
-    final retrievalChain = contextualizeChain
-        .pipe(retriever) //
+    // 1. We retrieve the most relevant documents and combine them into a single string
+    final retrievalChain = retriever //
         .pipe(Runnable.mapInput((docs) => docs
             .map((d) => ''
                 '<note id="${d.metadata['note_id']}">\n'
@@ -51,7 +29,7 @@ Do NOT answer the question, just reformulate it if needed and otherwise return i
                 '</note>')
             .join('\n')));
 
-    // 3. We generate a response to the user question using the retrieved context
+    // 2. We generate a response to the user question using the retrieved context
     final qaPrompt = ChatPromptTemplate.fromTemplates(const [
       (
         ChatMessageType.system,
