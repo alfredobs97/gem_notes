@@ -45,6 +45,14 @@ class LocalStorageService {
     return notes.map((note) => note.toModel()).toList();
   }
 
+  void editNote(String id, String newContent) {
+    final note = _notesBox.get(int.parse(id));
+
+    if (note != null) {
+      _notesBox.put(note.copyWith(content: newContent));
+    }
+  }
+
   List<Document> _createNoteChunks(Note note) {
     final noteString = '${note.title}\n\n${note.content}';
     return _textSplitter.splitText(noteString).mapIndexed((index, chunk) {

@@ -61,4 +61,13 @@ class NotesCubit extends Cubit<NotesState> {
       emit(NotesError(error: e));
     }
   }
+
+  Future<void> editNote({required String id, required String newContent}) async {
+    try {
+      localStorageService.editNote(id, newContent);
+      loadNotes();
+    } catch (e) {
+      emit(NotesError(error: e));
+    }
+  }
 }
