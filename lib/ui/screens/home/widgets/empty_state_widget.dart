@@ -13,12 +13,12 @@ class EmptyStateWidget extends StatelessWidget {
           height: 16,
         ),
         Text(
-          'No notes here yet!',
+          'No tienes notas...',
           style: Theme.of(context).textTheme.displayMedium,
         ),
         const SizedBox(height: 8),
         Text(
-          'Add you first note to interact with the AI',
+          'añade tu primera nota y empieza a interactuar con la IA',
           style: Theme.of(context).textTheme.bodyMedium,
         )
       ],
