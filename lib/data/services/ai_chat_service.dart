@@ -40,6 +40,8 @@ Use the following pieces of retrieved context to answer the user question.
 If you don't know the answer, just say that you don't know. 
 Use three sentences maximum and keep the answer concise.
 
+Respond in the language of the user's query.
+
 Context:
 {context}
 '''
