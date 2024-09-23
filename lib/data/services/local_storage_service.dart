@@ -21,8 +21,9 @@ class LocalStorageService {
   final RecursiveCharacterTextSplitter _textSplitter;
 
   Future<void> storeNote(Note note) async {
-    _notesBox.put(NoteEntity.fromModel(note));
-    final docs = _createNoteChunks(note);
+    final entity = NoteEntity.fromModel(note);
+    _notesBox.put(entity);
+    final docs = _createNoteChunks(entity);
     await _vectorStore.addDocuments(documents: docs);
   }
 
@@ -50,10 +51,12 @@ class LocalStorageService {
 
     if (note != null) {
       _notesBox.put(note.copyWith(content: newContent));
+      _deleteNoteEmbeddings(note);
+      unawaited(_vectorStore.addDocuments(documents: _createNoteChunks(note)));
     }
   }
 
-  List<Document> _createNoteChunks(Note note) {
+  List<Document> _createNoteChunks(NoteEntity note) {
     final noteString = '${note.title}\n\n${note.content}';
     return _textSplitter.splitText(noteString).mapIndexed((index, chunk) {
       return Document(
@@ -64,5 +67,10 @@ class LocalStorageService {
         },
       );
     }).toList();
+  }
+
+  Future<void> _deleteNoteEmbeddings(NoteEntity note) async {
+    final docsId = await _vectorStore.similaritySearch(query: note.content);
+    _vectorStore.delete(ids: docsId.map((docs) => docs.id).whereNotNull().toList());
   }
 }
