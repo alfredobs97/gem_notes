@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:gem_notes/core/model/note.dart';
 import 'package:gem_notes/data/services/local_storage_service.dart';
 import 'package:meta/meta.dart';
-import 'package:uuid/uuid.dart';
 
 part 'notes_state.dart';
 
@@ -30,7 +29,6 @@ class NotesCubit extends Cubit<NotesState> {
   }) {
     try {
       final note = Note(
-        id: const Uuid().v4(),
         title: title,
         content: content,
         date: DateTime.now(),
@@ -43,7 +41,7 @@ class NotesCubit extends Cubit<NotesState> {
     }
   }
 
-  Future<void> deleteNote(String id) async {
+  Future<void> deleteNote(int id) async {
     try {
       localStorageService.deleteNote(id);
       loadNotes();
@@ -62,7 +60,7 @@ class NotesCubit extends Cubit<NotesState> {
     }
   }
 
-  Future<void> editNote({required String id, required String newContent}) async {
+  Future<void> editNote({required int id, required String newContent}) async {
     try {
       localStorageService.editNote(id, newContent);
       loadNotes();

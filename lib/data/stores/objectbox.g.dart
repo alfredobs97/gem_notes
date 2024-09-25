@@ -60,34 +60,28 @@ final _entities = <obx_int.ModelEntity>[
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[]),
   obx_int.ModelEntity(
-      id: const obx_int.IdUid(3, 8711972715997854453),
+      id: const obx_int.IdUid(4, 8041906496412246930),
       name: 'NoteEntity',
-      lastPropertyId: const obx_int.IdUid(5, 8582769590343536364),
+      lastPropertyId: const obx_int.IdUid(4, 8655969530254824125),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(1, 631840292587637292),
-            name: 'internalId',
+            id: const obx_int.IdUid(1, 1843276951535069902),
+            name: 'id',
             type: 6,
             flags: 1),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(2, 5679661900170170170),
-            name: 'id',
-            type: 9,
-            flags: 34848,
-            indexId: const obx_int.IdUid(4, 8547748684020807760)),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(3, 899134192743073257),
+            id: const obx_int.IdUid(2, 1629714928150485025),
             name: 'title',
             type: 9,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(4, 4656112339183386521),
+            id: const obx_int.IdUid(3, 2699586301555232634),
             name: 'content',
             type: 9,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(5, 8582769590343536364),
+            id: const obx_int.IdUid(4, 8655969530254824125),
             name: 'timestamp',
             type: 10,
             flags: 0)
@@ -131,18 +125,23 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(3, 8711972715997854453),
+      lastEntityId: const obx_int.IdUid(4, 8041906496412246930),
       lastIndexId: const obx_int.IdUid(4, 8547748684020807760),
       lastRelationId: const obx_int.IdUid(0, 0),
       lastSequenceId: const obx_int.IdUid(0, 0),
-      retiredEntityUids: const [3635119032225383272],
+      retiredEntityUids: const [3635119032225383272, 8711972715997854453],
       retiredIndexUids: const [],
       retiredPropertyUids: const [
         7311659951534772202,
         7693710975249712951,
         4768344853885082831,
         5157714840131346526,
-        5509364441883811211
+        5509364441883811211,
+        631840292587637292,
+        5679661900170170170,
+        899134192743073257,
+        4656112339183386521,
+        8582769590343536364
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -198,41 +197,37 @@ obx_int.ModelDefinition getObjectBoxModel() {
         model: _entities[1],
         toOneRelations: (NoteEntity object) => [],
         toManyRelations: (NoteEntity object) => {},
-        getId: (NoteEntity object) => object.internalId,
+        getId: (NoteEntity object) => object.id,
         setId: (NoteEntity object, int id) {
-          object.internalId = id;
+          object.id = id;
         },
         objectToFB: (NoteEntity object, fb.Builder fbb) {
-          final idOffset = fbb.writeString(object.id);
           final titleOffset = fbb.writeString(object.title);
           final contentOffset = fbb.writeString(object.content);
-          fbb.startTable(6);
-          fbb.addInt64(0, object.internalId);
-          fbb.addOffset(1, idOffset);
-          fbb.addOffset(2, titleOffset);
-          fbb.addOffset(3, contentOffset);
-          fbb.addInt64(4, object.timestamp.millisecondsSinceEpoch);
+          fbb.startTable(5);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, titleOffset);
+          fbb.addOffset(2, contentOffset);
+          fbb.addInt64(3, object.timestamp.millisecondsSinceEpoch);
           fbb.finish(fbb.endTable());
-          return object.internalId;
+          return object.id;
         },
         objectFromFB: (obx.Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
-          final idParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 6, '');
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           final titleParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 8, '');
+              .vTableGet(buffer, rootOffset, 6, '');
           final contentParam = const fb.StringReader(asciiOptimization: true)
-              .vTableGet(buffer, rootOffset, 10, '');
+              .vTableGet(buffer, rootOffset, 8, '');
           final timestampParam = DateTime.fromMillisecondsSinceEpoch(
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0));
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0));
           final object = NoteEntity(
               id: idParam,
               title: titleParam,
               content: contentParam,
-              timestamp: timestampParam)
-            ..internalId =
-                const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+              timestamp: timestampParam);
 
           return object;
         })
@@ -266,23 +261,19 @@ class DocumentEntity_ {
 
 /// [NoteEntity] entity fields to define ObjectBox queries.
 class NoteEntity_ {
-  /// See [NoteEntity.internalId].
-  static final internalId =
-      obx.QueryIntegerProperty<NoteEntity>(_entities[1].properties[0]);
-
   /// See [NoteEntity.id].
   static final id =
-      obx.QueryStringProperty<NoteEntity>(_entities[1].properties[1]);
+      obx.QueryIntegerProperty<NoteEntity>(_entities[1].properties[0]);
 
   /// See [NoteEntity.title].
   static final title =
-      obx.QueryStringProperty<NoteEntity>(_entities[1].properties[2]);
+      obx.QueryStringProperty<NoteEntity>(_entities[1].properties[1]);
 
   /// See [NoteEntity.content].
   static final content =
-      obx.QueryStringProperty<NoteEntity>(_entities[1].properties[3]);
+      obx.QueryStringProperty<NoteEntity>(_entities[1].properties[2]);
 
   /// See [NoteEntity.timestamp].
   static final timestamp =
-      obx.QueryDateProperty<NoteEntity>(_entities[1].properties[4]);
+      obx.QueryDateProperty<NoteEntity>(_entities[1].properties[3]);
 }

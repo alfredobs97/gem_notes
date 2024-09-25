@@ -26,6 +26,12 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
   }
 
   @override
+  void dispose() {
+    _editController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -74,14 +80,14 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                 ...[
                   const SizedBox(height: 8),
                   IconButton.filled(
-                  onPressed: () {
-                    _tempNote = _tempNote.copyWith(content: _editController.text);
-                    _isEditMode = false;
-                    context.read<NotesCubit>().editNote(id: _tempNote.id, newContent: _tempNote.content);
-                    setState(() {});
-                  },
-                  icon: const Icon(Icons.save_as),
-                )
+                    onPressed: () {
+                      _tempNote = _tempNote.copyWith(content: _editController.text);
+                      _isEditMode = false;
+                      context.read<NotesCubit>().editNote(id: _tempNote.id, newContent: _tempNote.content);
+                      setState(() {});
+                    },
+                    icon: const Icon(Icons.save_as),
+                  )
                 ]
             ],
           ),
