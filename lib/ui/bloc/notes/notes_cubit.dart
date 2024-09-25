@@ -43,7 +43,7 @@ class NotesCubit extends Cubit<NotesState> {
 
   Future<void> deleteNote(int id) async {
     try {
-      localStorageService.deleteNote(id);
+      await localStorageService.deleteNote(id);
       loadNotes();
     } catch (e) {
       emit(NotesError(error: e));

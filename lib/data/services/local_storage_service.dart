@@ -28,9 +28,9 @@ class LocalStorageService {
 
   List<Note> getNotes() => _notesBox.getAll().map((dto) => dto.toModel()).toList();
 
-  void deleteNote(int id) {
-    _notesBox.remove(id);
-    // unawaited(_vectorStore.delete(ids: [id])); // TODO implement
+  Future<void> deleteNote(int id) async {
+    await _notesBox.removeAsync(id);
+    await _vectorStore.deleteWhere(DocumentEntity_.id.startsWith('$id'));
   }
 
   Future<List<Note>> searchNotes(String query) async {
