@@ -2,6 +2,8 @@
 
 **Unlock the power of your personal knowledge base with GemNotes!** This Flutter application leverages the cutting-edge capabilities of Google Gemini and LangChain to let you interact with your notes in a conversational manner. Ask questions, gain insights, and rediscover the hidden gems within your own data.
 
+[Here is the **Medium** post](https://medium.com/@alfredobs97/gemnotes-chatea-con-tus-notas-una-gu%C3%ADa-para-construir-tu-propio-asistente-con-gemini-y-langchain-fbed79934ca6) to learn step by step how this app works.
+
 ## Features
 
 * **Chat with your Notes:** Ask Gemini AI questions based on the content of your notes.
