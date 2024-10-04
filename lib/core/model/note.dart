@@ -1,18 +1,18 @@
 class Note {
   Note({
-    required this.id,
+    this.id = 0,
     required this.title,
     required this.content,
     required this.date,
   });
 
-  final String id;
+  final int id;
   final String title;
   final String content;
   final DateTime date;
 
   Note copyWith({
-    String? id,
+    int? id,
     String? title,
     String? content,
     DateTime? date,

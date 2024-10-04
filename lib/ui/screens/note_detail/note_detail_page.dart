@@ -26,6 +26,12 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
   }
 
   @override
+  void dispose() {
+    _editController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -49,7 +55,10 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
           IconButton(
             onPressed: () => showAdaptiveDialog(
               context: context,
-              builder: (_) => ConfirmDeleteDialog(note: widget.note),
+              builder: (_) => ConfirmDeleteDialog(
+                note: widget.note,
+                onDeleted: () => Navigator.pop(context),
+              ),
             ),
             icon: const Icon(Icons.delete),
           )
@@ -70,10 +79,9 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                 )
               else
                 MarkdownBody(data: _tempNote.content),
-              if (_isEditMode)
-                ...[
-                  const SizedBox(height: 8),
-                  IconButton.filled(
+              if (_isEditMode) ...[
+                const SizedBox(height: 8),
+                IconButton.filled(
                   onPressed: () {
                     _tempNote = _tempNote.copyWith(content: _editController.text);
                     _isEditMode = false;
@@ -82,7 +90,7 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                   },
                   icon: const Icon(Icons.save_as),
                 )
-                ]
+              ]
             ],
           ),
         ),

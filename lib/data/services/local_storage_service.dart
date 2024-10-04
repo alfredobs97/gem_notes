@@ -21,17 +21,16 @@ class LocalStorageService {
   final RecursiveCharacterTextSplitter _textSplitter;
 
   Future<void> storeNote(Note note) async {
-    final entity = NoteEntity.fromModel(note);
-    _notesBox.put(entity);
-    final docs = _createNoteChunks(entity);
+    final id = _notesBox.put(NoteEntity.fromModel(note));
+    final docs = _createNoteChunks(id, note);
     await _vectorStore.addDocuments(documents: docs);
   }
 
   List<Note> getNotes() => _notesBox.getAll().map((dto) => dto.toModel()).toList();
 
-  void deleteNote(String id) {
-    _notesBox.remove(int.parse(id));
-    unawaited(_vectorStore.delete(ids: [id]));
+  Future<void> deleteNote(int id) async {
+    await _notesBox.removeAsync(id);
+    await _vectorStore.deleteWhere(DocumentEntity_.id.startsWith('$id'));
   }
 
   Future<List<Note>> searchNotes(String query) async {
@@ -46,24 +45,24 @@ class LocalStorageService {
     return notes.map((note) => note.toModel()).toList();
   }
 
-  void editNote(String id, String newContent) {
-    final note = _notesBox.get(int.parse(id));
+  void editNote(int id, String newContent) {
+    final note = _notesBox.get(id);
 
     if (note != null) {
-      _notesBox.put(note.copyWith(content: newContent));
+      final id = _notesBox.put(note.copyWith(content: newContent));
       _deleteNoteEmbeddings(note);
-      unawaited(_vectorStore.addDocuments(documents: _createNoteChunks(note)));
+      unawaited(_vectorStore.addDocuments(documents: _createNoteChunks(id, note.toModel())));
     }
   }
 
-  List<Document> _createNoteChunks(NoteEntity note) {
+  List<Document> _createNoteChunks(int id, Note note) {
     final noteString = '${note.title}\n\n${note.content}';
     return _textSplitter.splitText(noteString).mapIndexed((index, chunk) {
       return Document(
-        id: '${note.id}_$index',
+        id: '${id}_$index',
         pageContent: chunk,
         metadata: {
-          'note_id': note.id,
+          'note_id': id,
         },
       );
     }).toList();
