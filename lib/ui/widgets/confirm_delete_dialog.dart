@@ -4,9 +4,14 @@ import 'package:gem_notes/core/model/note.dart';
 import 'package:gem_notes/ui/bloc/notes/notes_cubit.dart';
 
 class ConfirmDeleteDialog extends StatelessWidget {
-  final Note note;
+  const ConfirmDeleteDialog({
+    super.key,
+    required this.note,
+    required this.onDeleted,
+  });
 
-  const ConfirmDeleteDialog({super.key, required this.note});
+  final Note note;
+  final VoidCallback onDeleted;
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +24,15 @@ class ConfirmDeleteDialog extends StatelessWidget {
           child: const Text('Cancelar'),
         ),
         TextButton(
-          onPressed: () {
-            context.read<NotesCubit>().deleteNote(note.id);
-            Navigator.pop(context);
+          onPressed: () async {
+            await context.read<NotesCubit>().deleteNote(note.id);
+            if (context.mounted) {
+              Navigator.pop(context);
+              onDeleted();
+            }
           },
           style: TextButton.styleFrom(
-            foregroundColor: Theme.of(context).colorScheme.errorContainer
+            foregroundColor: Theme.of(context).colorScheme.errorContainer,
           ),
           child: const Text('Eliminar'),
         ),

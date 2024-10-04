@@ -22,7 +22,12 @@ void main() async {
   final storeDir = await getApplicationDocumentsDirectory();
   final store = await openStore(directory: storeDir.path);
   const geminiApiKey = String.fromEnvironment('GEMINI_API_KEY');
-  final chatModel = ChatGoogleGenerativeAI(apiKey: geminiApiKey);
+  final chatModel = ChatGoogleGenerativeAI(
+    apiKey: geminiApiKey,
+    defaultOptions: const ChatGoogleGenerativeAIOptions(
+      model: 'gemini-1.5-pro',
+    ),
+  );
   final embeddingModel = GoogleGenerativeAIEmbeddings(apiKey: geminiApiKey);
   final vectorStore = NotesVectorStore(
     embeddings: embeddingModel,
